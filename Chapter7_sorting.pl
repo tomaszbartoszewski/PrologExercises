@@ -61,3 +61,20 @@ quicksortx([H|T], S, X) :-
     split(H, T, A, B),
     quicksortx(A, S, [H|Y]),
     quicksortx(B, Y, X).
+
+% Exercise 7.6, this version is slower than quicksort, but it does sort
+% maybe append slows it down
+% time(hybridsort([5,4,3,2,1,1,4,8,1,2], X)).
+hybridsort(X, Y) :- length(X, Length), hybridsortx(X, Y, [], Length).
+hybridsortx(L, S, X, Lenght) :-
+    Lenght < 10, !,
+    insort(L, Sorted),
+    append(Sorted, X, S).
+hybridsortx([H|T], S, X, _) :-
+    splitWithCount(H, T, A, B, ALength, BLength),
+    hybridsortx(A, S, [H|Y], ALength),
+    hybridsortx(B, Y, X, BLength).
+
+splitWithCount(H, [A|X], [A|Y], Z, YLength, ZLength) :- order(A,H), splitWithCount(H, X, Y, Z, YL1, ZLength), YLength is YL1 + 1.
+splitWithCount(H, [A|X], Y, [A|Z], YLength, ZLength) :- \+(order(A, H)), splitWithCount(H, X, Y, Z, YLength, ZL1), ZLength is ZL1 + 1.
+splitWithCount(_, [], [], [], 0, 0).
