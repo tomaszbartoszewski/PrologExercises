@@ -56,3 +56,16 @@ collect_found(S, L) :-
 collect_found(L, L).
 
 getnext(Y) :- retract(found(X)), !, X = result(Y).
+
+
+% random_pick([1,2,3,4,5,6,7], E).
+
+random_pick(L, E) :-
+    length(L, Length),
+    random(Length, Position),
+    getElement(L, Position, E).
+
+getElement([H|_], 1, H) :- !.
+getElement([_|T], Position, Result) :-
+    NewPosition is Position - 1,
+    getElement(T, NewPosition, Result).
