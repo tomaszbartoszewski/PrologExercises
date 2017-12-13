@@ -24,7 +24,8 @@ legal(_, []).
 legal(X, [H|T]) :- \+ X = H, legal(X, T).
 
 
+% goUndirected(c, d, []).
 goUndirected(X, X, _).
 goUndirected(X, Y, T) :-
     (a(X, Z) ; a(Z, X)),
-    legal(Z, T), go(Z, Y, [Z|T]).
+    legal(Z, T), goUndirected(Z, Y, [Z|T]).
