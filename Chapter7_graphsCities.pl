@@ -40,4 +40,35 @@ go0_2([First|_], Dest, First) :- First = [Dest|_].
 go0_2([[Last|Trail]|Others], Dest, Route) :-
     findall([Z, Last|Trail], legalnode(Last, Trail, Z), List),
     append(List, Others, NewRoutes),
+    % write(NewRoutes), nl,
     go0_2(NewRoutes, Dest, Route).
+
+
+
+% go_bfs(darlington, workington, X).
+
+go_bfs(Start, Dest, Route) :-
+    go_bfs0([[Start]], Dest, R),
+    rev(R, Route).
+
+go_bfs0([First|_], Dest, First) :- First = [Dest|_].
+go_bfs0([[Last|Trail]|Others], Dest, Route) :-
+    findall([Z, Last|Trail], legalnode(Last, Trail, Z), List),
+    append(Others, List, NewRoutes),
+    go_bfs0(NewRoutes, Dest, Route).
+
+
+% go_bfs_2(darlington, workington, X).
+% that one works only if we are sure that there is a path from start to destination
+% if we search for node which is not available we may end up running in circles
+% without checking which nodes we already visited
+
+go_bfs_2(Start, Dest, Route) :-
+    go_bfs0_2([[Start]], Dest, R),
+    rev(R, Route).
+
+go_bfs0_2([First|_], Dest, First) :- First = [Dest|_], !.
+go_bfs0_2([[Last|Trail]|Others], Dest, Route) :-
+    findall([Z, Last|Trail], (a(Last, Z) ; a(Z, Last)), List),
+    append(Others, List, NewRoutes),
+    go_bfs0_2(NewRoutes, Dest, Route).
