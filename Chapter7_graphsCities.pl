@@ -12,6 +12,8 @@ revzap([X|L], L2, L3) :- revzap(L, [X|L2], L3).
 revzap([], L, L).
 
 
+% go(darlington, workington, X).
+
 go(Start, Dest, Route) :-
     go0(Start, Dest, [], R),
     rev(R, Route).
@@ -28,12 +30,14 @@ legal(_, []).
 legal(X, [H|T]) :- \+ X = H, legal(X, T).
 
 
-%go(Start, Dest, Route) :-
-%    go1([[Start]], Dest, R),
-%    rev(R, Route).
-%
-%go1([First|Rest], Dest, First) :- First = [Dest|_].
-%go1([[Last|Trail]|Others], Dest, Route) :-
-%    findall([Z, Last|Trail], legalnode(Last, Trail, Z), List),
-%    append(List, Others, NewRoutes),
-%    go1(NewRoutes, Dest, Route).
+% go_2(darlington, workington, X).
+
+go_2(Start, Dest, Route) :-
+    go0_2([[Start]], Dest, R),
+    rev(R, Route).
+
+go0_2([First|_], Dest, First) :- First = [Dest|_].
+go0_2([[Last|Trail]|Others], Dest, Route) :-
+    findall([Z, Last|Trail], legalnode(Last, Trail, Z), List),
+    append(List, Others, NewRoutes),
+    go0_2(NewRoutes, Dest, Route).
